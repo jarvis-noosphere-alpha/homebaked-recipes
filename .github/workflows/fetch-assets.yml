@@ -1,0 +1,35 @@
+name: Fetch recipe assets
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/fetch-assets.yml']
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download assets
+        run: |
+          mkdir -p img pins recipes
+          curl -sSL -o img/borscht.jpg 'https://api.spru.io/files/S39422cGAG90arXaoyriqA/borscht.jpg'
+          curl -sSL -o img/zrazy.jpg 'https://api.spru.io/files/gy2VQJrmTlLn1RqESODw7Q/zrazy.jpg'
+          curl -sSL -o img/pirozhki.jpg 'https://api.spru.io/files/VVPycf_iJicxzhTibs2PMw/pirozhki.jpg'
+          curl -sSL -o img/kefir-buns.jpg 'https://api.spru.io/files/CrskREPfaerhgswJCgzT3w/kefir-buns.jpg'
+          curl -sSL -o img/medovik.jpg 'https://api.spru.io/files/_P4d8nsE-EsyxEfn2_P5MQ/medovik.jpg'
+          curl -sSL -o img/sirniki.jpg 'https://api.spru.io/files/-PpbJ3BetqjY53TsuZHbDg/sirniki.jpg'
+          curl -sSL -o recipes/borscht.html 'https://api.spru.io/files/xTs-sjpaTTlv2ugEup8fhA/borscht.html'
+          curl -sSL -o recipes/pirozhki.html 'https://api.spru.io/files/rrhYXK9TayBkctVvF2SMYg/pirozhki.html'
+          curl -sSL -o recipes/kefir-buns.html 'https://api.spru.io/files/LjHWQFzUxiU27yxcEFZPZw/kefir-buns.html'
+          curl -sSL -o recipes/medovik.html 'https://api.spru.io/files/4V96It5U5PaLEWiotZhKYw/medovik.html'
+          curl -sSL -o recipes/sirniki.html 'https://api.spru.io/files/0CHDc00sNetUk2wmOt3ELg/sirniki.html'
+          ls -la img recipes
+      - name: Commit and push
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --staged --quiet || git commit -m 'Fetch recipe assets'
+          git push
